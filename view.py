@@ -1,57 +1,67 @@
-import text_fields as msg
+import text_fields as txt
 
 
-def main_menu():
-    print('''Главное меню:
-                 1. Открыть файл
-                 2. Сохранить файл
-                 3. Показать все контакты 
-                 4. Создать новый контакт
-                 5. Найти контакт
-                 6. Удалить контакт
-                 7. Изменить контакт
-                 8. Выход ''')
+def main_menu() -> int:
+    print(txt.main_menu)
     while True:
-        choice = input('Выберите пункт меню: ')
+        choice = input(txt.choice_menu)
         if choice.isdigit() and 0 < int(choice) < 9:
             return int(choice)
-        else:
-            print('Ведите число от 1 до 8: ')
 
 
-def print_info(message: str):
-    line = '\n' + '-' * len(message)
-    print(line)
-    print(message)
-    print(line)
-
-
-def show_contacts(book: list[dict], message: str):
-    line = '\n' + '-' * 63
+def show_contacts(book: list[dict], message: str) -> None:
+    print('\n' + '-' * 70)
     if book:
-        print(line)
-        for n, contact in enumerate(book, 1):
-            print(f'{n:>3}. {contact.get("name"):<20}'
+        for i, contact in enumerate(book, 1):
+            print(f'{i}. {contact.get("name"):<20}'
                   f'{contact.get("phone"):<20}'
                   f'{contact.get("comment"):<20}')
-        print(line)
     else:
         print(message)
+    print('-' * 70 + '\n')
 
 
-def new_contact() -> dict:
+def print_message(message: str) -> None:
+    print('\n' + '-' * len(message))
+    print(message)
+    print('-' * len(message) + '\n')
+
+
+def edit_contact(book: list, message: str) -> tuple[int, dict[str, str]]:
+    index = 0
+    while True:
+        choice = input(message)
+        if choice.isdigit() and 0 < int(choice) < len(book) + 1:
+            index = int(choice)
+            break
+    print(txt.enter_or_empty)
+    contact = new_contact()
+    return index, contact
+
+
+def new_contact() -> dict[str, str]:
     print()
-    name = input(msg.new_name)
-    phone = input(msg.new_phone)
-    comment = input(msg.new_comment)
-    print()
+    name = input(txt.new_name)
+    phone = input(txt.new_phone)
+    comment = input(txt.new_comment)
     return {'name': name, 'phone': phone, 'comment': comment}
 
 
-def confirm(message: str) -> bool:
+def enter_keyword() -> str:
     print()
-    answer = input(message)
+    key_word = input(txt.input_keyword)
+    return key_word
+
+
+def input_index(book: list, message: str) -> int:
+    while True:
+        choice = input(message)
+        if choice.isdigit() and 0 < int(choice) < len(book) + 1:
+            return int(choice)
+
+
+def confirm(message: str):
+    answer = input(message + ' (y/n)')
     if answer.lower() == 'y':
         return True
-    else:
-        return False
+    return False
